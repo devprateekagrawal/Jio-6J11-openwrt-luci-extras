@@ -1,0 +1,2 @@
+# Scripts run on the router: keep LF even in Windows clones
+* text=auto eol=lf
