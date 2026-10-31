@@ -4,10 +4,14 @@ Three small LuCI pages and a few notes from my home router setup: OpenWrt on a
 JioRouter AX6000 (JIDU6J11), with an IPv6-only Jio phone tethered as the uplink.
 
 > [!CAUTION]
-> **Use at your own risk.** Tested only on my router (OpenWrt SNAPSHOT, apk,
-> kernel 6.18, 4-core ARM, ~430 MB RAM). It should work on other OpenWrt
-> routers, but I can't promise it, and **I can't offer support**.
-> Back up first (System → Backup / Flash Firmware → Generate archive).
+> **Use at your own risk.** These were built for my own setup and pulled out of
+> it into generic install scripts. The pages run daily on my router (OpenWrt
+> SNAPSHOT, apk, kernel 6.18, 4-core ARM, ~430 MB RAM), but **the generic
+> installers haven't been tested on a fresh router, so they may fail even on
+> the same JIDU6J11.** I can't offer support. Bug reports and fixes are
+> welcome as GitHub issues and pull requests.
+> Back up first (System → Backup / Flash Firmware → Generate archive), and
+> install one page at a time.
 
 > [!NOTE]
 > **Disclosure:** I built most of this with help from Claude (Anthropic's AI).
