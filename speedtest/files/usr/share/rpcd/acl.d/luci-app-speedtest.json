@@ -1,0 +1,7 @@
+{
+	"luci-app-speedtest": {
+		"description": "Speed Test: the router's own IPv4 and IPv6 speed to Cloudflare",
+		"read": { "ubus": { "speedtest": [ "status", "history" ] } },
+		"write": { "ubus": { "speedtest": [ "start", "stop" ] } }
+	}
+}

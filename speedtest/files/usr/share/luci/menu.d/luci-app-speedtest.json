@@ -1,0 +1,13 @@
+{
+	"admin/services/speedtest": {
+		"title": "Speed Test",
+		"order": 18,
+		"action": {
+			"type": "view",
+			"path": "speedtest"
+		},
+		"depends": {
+			"acl": [ "luci-app-speedtest" ]
+		}
+	}
+}

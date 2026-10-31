@@ -1,0 +1,13 @@
+{
+	"admin/services/devlog": {
+		"title": "Device Usage",
+		"order": 17,
+		"action": {
+			"type": "view",
+			"path": "devlog"
+		},
+		"depends": {
+			"acl": [ "luci-app-devlog" ]
+		}
+	}
+}

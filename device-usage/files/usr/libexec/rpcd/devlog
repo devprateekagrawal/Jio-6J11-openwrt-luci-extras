@@ -1,0 +1,32 @@
+#!/bin/sh
+# rpcd plugin for the Device Usage LuCI page (backend /usr/bin/devlog.sh)
+
+# "<name>":"<lines, each ending in \n>"
+field() { printf '"%s":"' "$1"; awk '{ printf "%s\\n", $0 }'; printf '"'; }
+
+case "$1" in
+	list) echo '{ "get": { "hours": 24 }, "live": { }, "setlimit": { "mac": "str", "on": true, "mbps": 10 } }' ;;
+	call)
+		read -r in
+		case "$2" in
+			get)
+				h=$(echo "$in" | jsonfilter -e '@.hours')
+				case "$h" in ''|*[!0-9]*) h=24 ;; esac
+				printf '{'
+				/usr/bin/devlog.sh devs $h | field devs; printf ','
+				/usr/bin/devlog.sh sums $h | field sums; printf ','
+				/usr/bin/devlog.sh rows $h | field rows; printf ','
+				/usr/bin/devlog.sh now | field now; printf ','
+				/usr/bin/devlog.sh lims | field lims
+				echo '}' ;;
+			live)
+				printf '{'; /usr/bin/devlog.sh now | field now; echo '}' ;;
+			setlimit)
+				m=$(echo "$in" | jsonfilter -e '@.mac')
+				on=$(echo "$in" | jsonfilter -e '@.on')
+				v=$(echo "$in" | jsonfilter -e '@.mbps')
+				[ "$on" = true ] && on=1 || on=0
+				r=$(/usr/bin/devlog.sh limit "$m" $on "$v" 2>&1 | tail -n 1 | tr -d '"\\')
+				printf '{"result":"%s"}\n' "$r" ;;
+		esac ;;
+esac

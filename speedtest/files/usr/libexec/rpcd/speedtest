@@ -1,0 +1,22 @@
+#!/bin/sh
+# rpcd plugin for the Speed Test LuCI page (backend /usr/bin/speedtest.sh)
+
+# "<name>":"<lines, each ending in \n>"
+field() { printf '"%s":"' "$1"; awk '{ gsub(/["\\]/, ""); printf "%s\\n", $0 }'; printf '"'; }
+
+case "$1" in
+	list) echo '{ "status": { }, "history": { }, "start": { "which": "str" }, "stop": { } }' ;;
+	call)
+		read -r in
+		case "$2" in
+			status)
+				printf '{'; /usr/bin/speedtest.sh status | field st; echo '}' ;;
+			history)
+				printf '{'; /usr/bin/speedtest.sh history | field hist; echo '}' ;;
+			start)
+				w=$(echo "$in" | jsonfilter -e '@.which')
+				printf '{"result":"%s"}\n' "$(/usr/bin/speedtest.sh start "$w" | tail -n 1)" ;;
+			stop)
+				printf '{"result":"%s"}\n' "$(/usr/bin/speedtest.sh stop | tail -n 1)" ;;
+		esac ;;
+esac

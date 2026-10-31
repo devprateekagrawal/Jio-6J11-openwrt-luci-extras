@@ -1,0 +1,20 @@
+# Force every LAN device's plain DNS (port 53, IPv4 and IPv6) to the router's
+# own resolver (dnsmasq, and whatever it forwards to: NextDNS, AdGuard Home,
+# etc.), even devices with a hard-coded 8.8.8.8 or a hard-coded IPv6 resolver.
+#
+# Install: copy to /etc/nftables.d/30-dns-hijack.nft, then
+#   fw4 check && /etc/init.d/firewall restart
+# Remove: delete the file and restart the firewall.
+#
+# fw4 includes this file inside its "table inet fw4", so the chain below needs
+# no table around it. "redirect" sends the packet to the router's own address
+# on the interface it came in on, for IPv4 and IPv6 alike.
+# Change "br-lan" if your LAN bridge has another name.
+#
+# It does not stop DNS-over-HTTPS or DNS-over-TLS that apps or browsers use
+# themselves; that needs a DoH blocklist on your resolver.
+
+chain dstnat_dns_hijack {
+	type nat hook prerouting priority dstnat; policy accept;
+	iifname "br-lan" meta l4proto { tcp, udp } th dport 53 redirect to :53 comment "Force LAN DNS to the router"
+}

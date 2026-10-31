@@ -1,0 +1,7 @@
+{
+	"luci-app-devlog": {
+		"description": "Device Usage: per-device Wi-Fi download speed history and speed limits",
+		"read": { "ubus": { "devlog": [ "get", "live" ] } },
+		"write": { "ubus": { "devlog": [ "setlimit" ] } }
+	}
+}
