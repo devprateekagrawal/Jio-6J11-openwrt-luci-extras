@@ -1,0 +1,18 @@
+#!/bin/sh
+# rpcd plugin: ubus object "guestwifi" for the LuCI Guest Wi-Fi page
+G=/usr/bin/guestwifi.sh
+case "$1" in
+	list)
+		echo '{"status":{},"on":{"minutes":180,"data_mb":1024,"speed_mbps":20},"off":{},"newpass":{}}'
+		;;
+	call)
+		read -r input
+		get() { echo "$input" | jsonfilter -q -e "@.$1"; }
+		case "$2" in
+			on) $G on "$(get minutes)" "$(get data_mb)" "$(get speed_mbps)" >/dev/null 2>&1 ;;
+			off) $G off >/dev/null 2>&1 ;;
+			newpass) $G newpass >/dev/null 2>&1 ;;
+		esac
+		$G status
+		;;
+esac

@@ -1,0 +1,13 @@
+{
+	"admin/services/guestwifi": {
+		"title": "Guest Wi-Fi",
+		"order": 61,
+		"action": {
+			"type": "view",
+			"path": "guestwifi"
+		},
+		"depends": {
+			"acl": [ "luci-app-guestwifi" ]
+		}
+	}
+}

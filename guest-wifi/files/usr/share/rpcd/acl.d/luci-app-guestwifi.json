@@ -1,0 +1,11 @@
+{
+	"luci-app-guestwifi": {
+		"description": "Guest Wi-Fi on/off with timer, data and speed limits",
+		"read": {
+			"ubus": { "guestwifi": [ "status" ] }
+		},
+		"write": {
+			"ubus": { "guestwifi": [ "on", "off", "newpass" ] }
+		}
+	}
+}
