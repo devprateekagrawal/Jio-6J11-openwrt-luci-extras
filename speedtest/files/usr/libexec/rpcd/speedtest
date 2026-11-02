@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # rpcd plugin for the Speed Test LuCI page (backend /usr/bin/speedtest.sh)
 
 # "<name>":"<lines, each ending in \n>"

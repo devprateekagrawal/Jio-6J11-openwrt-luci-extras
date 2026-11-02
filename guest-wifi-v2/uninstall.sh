@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Removes the Guest Wi-Fi page and its cron job, and turns guest Wi-Fi off.
 #   sh uninstall.sh         keeps the guest network (it stays off)
 #   sh uninstall.sh --all   also deletes the guest network, Wi-Fi, DHCP and firewall

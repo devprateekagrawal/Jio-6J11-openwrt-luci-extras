@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Force every LAN device's plain DNS (port 53, IPv4 and IPv6) to the router's
 # own resolver (dnsmasq, and whatever it forwards to: NextDNS, AdGuard Home,
 # etc.), even devices with a hard-coded 8.8.8.8 or a hard-coded IPv6 resolver.

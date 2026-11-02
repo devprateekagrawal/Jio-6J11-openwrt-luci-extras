@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Removes the Speed Test page and its history. Run on the router: sh uninstall.sh
 
 /usr/bin/speedtest.sh stop 2>/dev/null

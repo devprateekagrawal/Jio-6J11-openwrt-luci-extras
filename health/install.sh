@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Installs the Health page (LuCI -> Services -> Health) and its once-a-minute
 # sampler. Run on the router from this folder: sh install.sh
 # Your list of watched services (/etc/health.services) is kept if it exists.

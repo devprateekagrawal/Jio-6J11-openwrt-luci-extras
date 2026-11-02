@@ -3,6 +3,9 @@
 'require rpc';
 'require poll';
 
+// Copyright (c) 2026 Prateek Agrawal, MIT License
+// https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
+
 // Health: RAM, CPU per core, CLAT load, temperature, storage and service watchdog
 // (sampler /usr/bin/health.sh, cron every minute; this page only reads its files).
 // Look: an iOS-style grouped inset list that follows LuCI's dark mode.

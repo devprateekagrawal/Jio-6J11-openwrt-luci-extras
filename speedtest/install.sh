@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Installs the Speed Test page (LuCI -> Services -> Speed Test). Run on the
 # router from this folder: sh install.sh
 set -e

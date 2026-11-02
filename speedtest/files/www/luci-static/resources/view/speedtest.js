@@ -3,6 +3,9 @@
 'require rpc';
 'require poll';
 
+// Copyright (c) 2026 Prateek Agrawal, MIT License
+// https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
+
 // Speed Test: the router measures its own internet line to Cloudflare, IPv4 then
 // IPv6: ping, download, upload (backend /usr/bin/speedtest.sh, which runs the
 // test as its own process, so closing this page doesn't stop or break it).

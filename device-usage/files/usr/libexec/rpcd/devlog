@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # rpcd plugin for the Device Usage LuCI page (backend /usr/bin/devlog.sh)
 
 # "<name>":"<lines, each ending in \n>"

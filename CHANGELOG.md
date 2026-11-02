@@ -2,6 +2,13 @@
 
 Newest first. Dates are when the change landed in this repo.
 
+## 2026-11-03
+
+- Added a copyright line (Prateek Agrawal, MIT License, repo link) to the top of
+  every script, LuCI page and nft snippet, and a Credit section to the README.
+  No code changes. `qrcode.min.js` is a third-party library and keeps its own
+  notice.
+
 ## 2026-11-02
 
 ### Guest Wi-Fi v2: one QR per guest (new folder `guest-wifi-v2/`)

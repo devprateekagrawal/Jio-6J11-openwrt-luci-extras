@@ -3,6 +3,9 @@
 'require rpc';
 'require poll';
 
+// Copyright (c) 2026 Prateek Agrawal, MIT License
+// https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
+
 // Guest Wi-Fi: on/off with timer, data limit and speed limit (backend /usr/bin/guestwifi.sh).
 // Shown as a Wallet-style guest pass, following Apple's Human Interface Guidelines.
 // All markup is built from strings, so every value from the router goes through esc() (device names come from guests).

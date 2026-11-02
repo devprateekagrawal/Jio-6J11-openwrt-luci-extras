@@ -164,6 +164,15 @@ My router also runs an LED status scheme, an uplink watchdog, a network/battery
 logger and phone control over adb. Those are tied to my exact hardware and phone,
 and could restart the wrong interfaces on another router, so I'm not sharing them.
 
+## Credit
+
+Using this in a video, blog post, guide or your own project? Please credit
+**Prateek Agrawal** and link to this repo:
+https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
+
+Every script and page has a copyright line at the top. The MIT License requires
+that notice to stay in every copy, including copies you changed.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).

@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Guest Wi-Fi control (used by the LuCI page Services -> Guest Wi-Fi and by cron).
 # Usage: guestwifi.sh on <minutes> <data_mb> <speed_mbps> | off | tick | status | newpass
 #   minutes: 0 = no timer, -1 = until midnight; data_mb / speed_mbps: 0 = no limit

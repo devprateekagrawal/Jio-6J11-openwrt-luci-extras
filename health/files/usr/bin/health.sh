@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Health page (LuCI Services -> Health): RAM, CPU per core, CLAT (tayga) load if
 # you run one, temperature, flash and /tmp, and whether your key services and
 # cron jobs run. Cron runs it every minute (~30 ms); the page (rpcd

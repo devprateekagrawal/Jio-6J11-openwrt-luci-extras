@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Removes the Health page, its sampler, its service list, hook and history.
 # Run on the router: sh uninstall.sh
 

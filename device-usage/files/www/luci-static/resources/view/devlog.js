@@ -3,6 +3,9 @@
 'require rpc';
 'require poll';
 
+// Copyright (c) 2026 Prateek Agrawal, MIT License
+// https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
+
 // Device Usage: how much each Wi-Fi device downloads, minute by minute, and a
 // per-device download speed limit (backend /usr/bin/devlog.sh: the access
 // points' byte counters, and an HTB class per limited device on their egress).

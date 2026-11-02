@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Device usage: how fast each Wi-Fi device downloads, minute by minute (say the
 # TV on a 4K stream), to know what speed limit per device would still be enough.
 # Cron runs it every minute. It reads the access points' per-device byte

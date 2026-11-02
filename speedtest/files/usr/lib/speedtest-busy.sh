@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # The Speed Test page's test (/usr/bin/speedtest.sh) is running: its pid is in
 # /tmp/speedtest.pid and still alive. Source it from your own cron jobs that use
 # the line (watchdogs, loggers, failover checks) so they don't measure or restart

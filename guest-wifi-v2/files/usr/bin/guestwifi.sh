@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Guest Wi-Fi, one QR per guest (LuCI page Services -> Guest Wi-Fi, and cron).
 # Usage: guestwifi.sh power 1|0 | create <min> <mb> <mbps> <devs> [label]
 #        | edit <id> <min> <mb> <mbps> <devs> [label] | cancel|revoke|extend|unlock <id>

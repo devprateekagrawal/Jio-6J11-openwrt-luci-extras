@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Creates the guest network the Guest Wi-Fi page controls, if you don't have one:
 #   - bridge br-guest, interface "guest" on 192.168.2.1/24, DHCP (2 h leases), no IPv6
 #   - one guest AP per radio (ifname guest2g / guest5g / guest6g), WPA2 with the

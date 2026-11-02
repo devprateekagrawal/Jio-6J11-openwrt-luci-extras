@@ -3,6 +3,9 @@
 'require rpc';
 'require poll';
 
+// Copyright (c) 2026 Prateek Agrawal, MIT License
+// https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
+
 // Guest Wi-Fi, one QR per guest. Backend: /usr/bin/guestwifi.sh via rpcd "guestwifi".
 // Two page styles (Wallet / Dashboard), chosen in Settings and saved on the router
 // (uci guestwifi.ui.view).

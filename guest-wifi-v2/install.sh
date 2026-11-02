@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Installs the Guest Wi-Fi page (LuCI -> Services -> Guest Wi-Fi, one QR per guest)
 # and its once-a-minute time/data check. Run on the router from this folder:
 #   sh install.sh ["Guest SSID"]

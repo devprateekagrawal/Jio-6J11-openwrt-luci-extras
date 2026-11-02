@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # Speed test for the LuCI Speed Test page (Services -> Speed Test): the router
 # measures its own internet line to Cloudflare (speed.cloudflare.com, nearest
 # city), IPv4 then IPv6: ping, download, upload.

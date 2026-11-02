@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copyright (c) 2026 Prateek Agrawal, MIT License
+# https://github.com/devprateekagrawal/Jio-6J11-openwrt-luci-extras
 # rpcd plugin: ubus object "guestwifi" for the LuCI Guest Wi-Fi page (one QR per guest)
 G=/usr/bin/guestwifi.sh
 case "$1" in
