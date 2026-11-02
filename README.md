@@ -1,6 +1,6 @@
 # OpenWrt LuCI extras (JioRouter AX6000 / JIDU6J11)
 
-Four small LuCI pages and a few notes from my home router setup: OpenWrt on a
+Four small LuCI pages (two versions of Guest Wi-Fi) and a few notes from my home router setup: OpenWrt on a
 JioRouter AX6000 (JIDU6J11), with an IPv6-only Jio phone tethered as the uplink.
 
 > [!CAUTION]
@@ -24,7 +24,8 @@ JioRouter AX6000 (JIDU6J11), with an IPv6-only Jio phone tethered as the uplink.
 |---|---|
 | [`speedtest/`](speedtest) | **Speed Test** page (Services → Speed Test). The router tests its own line to Cloudflare: ping, jitter, download and upload, for IPv4 and IPv6 separately, with live graphs and a history. Shows the CLAT (tayga) CPU load if you run one. |
 | [`device-usage/`](device-usage) | **Device Usage** page (Services → Device Usage). Wi-Fi download/upload per device, minute by minute (median, 95th percentile, peak, MB used), plus optional per-device **download speed limits** (HTB on the access points). |
-| [`guest-wifi/`](guest-wifi) | **Guest Wi-Fi** "Guest Pass" page (Services → Guest Wi-Fi), v2. **One QR per guest**: each pass has its own password, time, data and speed limit, and the phones that join it are bound to it by MAC, so guests never share each other's limits. Edit, +1 h, revoke or cancel a pass any time; nobody else gets disconnected. Two page styles (Wallet / Dashboard) to pick in Settings. `setup.sh` creates the isolated guest network if you don't have one. |
+| [`guest-wifi/`](guest-wifi) | **Guest Wi-Fi** "Guest Pass" page (Services → Guest Wi-Fi). Turn guest Wi-Fi on for a set time (or until midnight) with a **data cap** and a **speed cap**. It turns itself off when either runs out. Shows the SSID, password and a join QR code, lists who's connected, and makes a new password in one tap. `setup.sh` creates the isolated guest network if you don't have one. |
+| [`guest-wifi-v2/`](guest-wifi-v2) | **Guest Wi-Fi v2** "Guest Pass" page (Services → Guest Wi-Fi). Replaces v1 (install one of the two). **One QR per guest**: each pass has its own password, time, data and speed limit, and the phones that join it are bound to it by MAC, so guests never share each other's limits. Edit, +1 h, revoke or cancel a pass any time; nobody else gets disconnected. Two page styles (Wallet / Dashboard) to pick in Settings. `setup.sh` creates the isolated guest network if you don't have one. |
 | [`health/`](health) | **Health** page (Services → Health). RAM, CPU per core, CLAT (tayga) load if you run one, temperature, flash and `/tmp`, with 24 h graphs and a daily summary for a year. It also watches the services you list and shows when each one last stopped. |
 | [`nft-snippets/`](nft-snippets) | `30-dns-hijack.nft`: forces all LAN devices' plain DNS (IPv4 and IPv6) to the router's resolver. |
 | [`docs/`](docs) | [`clat-ipv6-only-uplink.md`](docs/clat-ipv6-only-uplink.md): how to get fast IPv4 over an IPv6-only phone uplink with a router-side CLAT (tayga). |
@@ -40,7 +41,7 @@ scp -O -r speedtest root@192.168.1.1:/tmp/
 sh /tmp/speedtest/install.sh
 ```
 
-Do the same for `device-usage`, `guest-wifi` and `health`. Then reload LuCI: the page is under **Services**.
+Do the same for `device-usage`, `guest-wifi` (or `guest-wifi-v2`) and `health`. Then reload LuCI: the page is under **Services**.
 
 Installers copy the files, restart `rpcd`, clear the LuCI cache and add the files
 to `/etc/sysupgrade.conf`. `device-usage` and `health` also add a once-a-minute cron job.
@@ -55,9 +56,30 @@ to `/etc/sysupgrade.conf`. `device-usage` and `health` also add a once-a-minute 
   per-station counters, which also work with hardware flow offloading).
   History is kept in `/root/devlog.csv` and written to flash once an hour.
 
-- **Guest Wi-Fi**: `tc-tiny`, `kmod-sched-core`, `kmod-ifb` (the installer checks),
+- **Guest Wi-Fi**: `tc-tiny`, `kmod-sched-core`, `kmod-sched-cake`, `kmod-ifb`
+  (the installer checks). Install with `sh install.sh "My Guest"`. Without a
+  network called `guest`, it first runs `setup.sh`, which creates:
+  - a `br-guest` bridge on `192.168.2.1/24` with DHCP;
+  - one guest AP per radio, client isolation on, WPA2/WPA3, off by default;
+  - a firewall zone that only allows internet (no LAN, no router access except DHCP/DNS);
+  - guest DNS forced to the router.
+
+  Already have a guest network? The page controls every wifi-iface whose
+  network is `guest`; give each one an `ifname` like `guest2g` / `guest5g`.
+
+  **Notes:**
+  - The time, data and speed limits are for the **whole guest network**, shared
+    by all guests. They aren't per device.
+  - Time and data are checked once a minute, so a guest can go a little over
+    (at 10 Mbps, up to ~75 MB).
+  - After a reboot, guest Wi-Fi stays off until you turn it on again.
+  - With a router-side CLAT (see docs), add `iifname "br-guest" oifname "clat" accept`
+    to the CLAT forward rules, and the guest subnet to its NAT44 masquerade rule.
+
+- **Guest Wi-Fi v2** (`guest-wifi-v2/`): installs the same page and files as v1, so
+  use one or the other. Needs `tc-tiny`, `kmod-sched-core`, `kmod-ifb` (the installer checks),
   and a recent OpenWrt with the ucode hostapd scripts (tested on SNAPSHOT r35553).
-  Install with `sh install.sh "My Guest"`. Without a network called `guest`, it
+  Install with `sh install.sh "My Guest"` from `guest-wifi-v2/`. Without a network called `guest`, it
   first runs `setup.sh`, which creates:
   - a `br-guest` bridge on `192.168.2.1/24` with DHCP;
   - one guest AP per radio, client isolation on, off by default;
@@ -68,8 +90,8 @@ to `/etc/sysupgrade.conf`. `device-usage` and `health` also add a once-a-minute 
   network is `guest`; each one needs an `ifname` like `guest2g` / `guest5g`
   (the installer sets one if missing).
 
-  <p><img src="guest-wifi/screenshots/wallet.png" width="49%" alt="Guest Pass page, Wallet style: the open QR for the next guest and two passes in use">
-  <img src="guest-wifi/screenshots/dashboard.png" width="49%" alt="Guest Pass page, Dashboard style: online phones, booked speed, data used and a tile per pass"></p>
+  <p><img src="guest-wifi-v2/screenshots/wallet.png" width="49%" alt="Guest Pass page, Wallet style: the open QR for the next guest and two passes in use">
+  <img src="guest-wifi-v2/screenshots/dashboard.png" width="49%" alt="Guest Pass page, Dashboard style: online phones, booked speed, data used and a tile per pass"></p>
 
   **How it works:**
   - Tap **Next guest**, pick time, data, speed and how many devices, and show
@@ -94,8 +116,8 @@ to `/etc/sysupgrade.conf`. `device-usage` and `health` also add a once-a-minute 
   - Time and data are checked once a minute (every 3 s while the page is open),
     so a pass can go a little over: on my router a 200 MB pass at 30 Mbps ended at 202.6 MB.
   - After a reboot, guest Wi-Fi stays off and all passes are gone.
-  - Upgrading from v1 (one password for everyone): just run the new `install.sh`.
-    It turns v1 off first.
+  - Upgrading from v1 (one password for everyone): run `guest-wifi-v2/install.sh`.
+    It turns v1 off first and replaces its files.
   - If you also run Device Usage, use this repo's latest `devlog.sh`: it leaves the
     guest APs alone, so its speed limits don't clash with the per-pass ones.
   - With a router-side CLAT (see docs), add `iifname "br-guest" oifname "clat" accept`
@@ -129,6 +151,7 @@ to `/etc/sysupgrade.conf`. `device-usage` and `health` also add a once-a-minute 
 sh /tmp/speedtest/uninstall.sh
 sh /tmp/device-usage/uninstall.sh
 sh /tmp/guest-wifi/uninstall.sh          # add --all to also delete the guest network
+sh /tmp/guest-wifi-v2/uninstall.sh       # same for v2
 sh /tmp/health/uninstall.sh
 ```
 

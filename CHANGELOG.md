@@ -4,10 +4,16 @@ Newest first. Dates are when the change landed in this repo.
 
 ## 2026-11-02
 
-### Guest Wi-Fi v2: one QR per guest
+### Guest Wi-Fi v2: one QR per guest (new folder `guest-wifi-v2/`)
 
-The Guest Pass page is rewritten. v1 had one password and one set of limits
-shared by every guest. In v2 every guest gets a pass of their own.
+A new version of the Guest Pass page, in its own folder. v1 stays in
+`guest-wifi/`, unchanged. v1 had one password and one set of limits shared by
+every guest. In v2 every guest gets a pass of their own.
+
+- **Fresh install or upgrade, same script.** `guest-wifi-v2/install.sh` works
+  on a router without guest Wi-Fi and on one running v1. On v1 it turns v1 off,
+  then replaces its files under the same names, so the LuCI menu entry and the
+  cron job stay where they were. Remove v2 with `guest-wifi-v2/uninstall.sh`.
 
 - **Per-guest passes.** Each pass has its own 8-digit password, time, data
   limit, speed limit and number of devices (1–5). Phones that join are bound to
@@ -27,9 +33,9 @@ shared by every guest. In v2 every guest gets a pass of their own.
   capped (30 Mbps default, `uci set guestwifi.ui.cap=…`).
 - **Two page styles**, Wallet and Dashboard, picked in Settings (saved in
   `/etc/config/guestwifi`). The password shows only when you tap the eye icon.
-- **Screenshots** in [`guest-wifi/screenshots/`](guest-wifi/screenshots).
+- **Screenshots** in [`guest-wifi-v2/screenshots/`](guest-wifi-v2/screenshots).
 
-**Breaking changes:**
+**Changes compared with v1:**
 - Guest APs are now **WPA2 only (psk2)**, with PMF off. With WPA3, every change
   of the password file disconnected all WPA3 guests once. With PMF on, phones
   got "PSK mismatch" on 2.4 GHz.

@@ -1,0 +1,26 @@
+#!/bin/sh
+# rpcd plugin: ubus object "guestwifi" for the LuCI Guest Wi-Fi page (one QR per guest)
+G=/usr/bin/guestwifi.sh
+case "$1" in
+	list)
+		echo '{"status":{},"power":{"on":true},"create":{"time":180,"data":1024,"speed":10,"devs":1,"label":"str"},"edit":{"id":1,"time":180,"data":1024,"speed":10,"devs":1,"label":"str"},"cancel":{"id":1},"revoke":{"id":1},"extend":{"id":1},"unlock":{"id":1},"clear":{},"setview":{"view":"str"}}'
+		;;
+	call)
+		read -r input
+		get() { echo "$input" | jsonfilter -q -e "@.$1"; }
+		case "$2" in
+			power) if [ "$(get on)" = true ]; then $G power 1; else $G power 0; fi >/dev/null 2>&1 ;;
+			create) $G create "$(get time)" "$(get data)" "$(get speed)" "$(get devs)" "$(get label)" >/dev/null 2>&1 ;;
+			edit) $G edit "$(get id)" "$(get time)" "$(get data)" "$(get speed)" "$(get devs)" "$(get label)" >/dev/null 2>&1 ;;
+			cancel|revoke|extend|unlock) $G "$2" "$(get id)" >/dev/null 2>&1 ;;
+			clear) $G clear >/dev/null 2>&1 ;;
+			setview)
+				v=$(get view)
+				case "$v" in wallet|dashboard) ;; *) v=wallet ;; esac
+				[ -f /etc/config/guestwifi ] || printf "config ui 'ui'\n" > /etc/config/guestwifi
+				uci set guestwifi.ui.view="$v" && uci commit guestwifi
+				;;
+		esac
+		$G status
+		;;
+esac

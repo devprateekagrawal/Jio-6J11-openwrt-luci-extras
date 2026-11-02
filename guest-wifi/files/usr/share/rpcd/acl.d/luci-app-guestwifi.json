@@ -1,11 +1,11 @@
 {
 	"luci-app-guestwifi": {
-		"description": "Guest Wi-Fi: one QR per guest, each with its own time, data and speed",
+		"description": "Guest Wi-Fi on/off with timer, data and speed limits",
 		"read": {
 			"ubus": { "guestwifi": [ "status" ] }
 		},
 		"write": {
-			"ubus": { "guestwifi": [ "power", "create", "edit", "cancel", "revoke", "extend", "unlock", "clear", "setview" ] }
+			"ubus": { "guestwifi": [ "on", "off", "newpass" ] }
 		}
 	}
 }
