@@ -155,7 +155,7 @@ sum() { sums "$1" | awk -F, -v m="$2" '$1 == m { sub(/^[^,]*,/, ""); print; f = 
 # limits on the access points, see the top. Callers hold /var/lock/devlog-tc.
 apply() {
 	want=$(awk '$2 == 1 { print $1, $3 }' $LIM 2>/dev/null | sort)
-	for d in $(aps); do
+	for d in $(aps | grep -v "^guest"); do   # guest APs: guestwifi.sh shapes them per pass
 		st=/tmp/devlog.tc.$d
 		if [ -z "$want" ]; then
 			[ -f $st ] && { tc qdisc del dev $d root 2>/dev/null; rm -f $st; }

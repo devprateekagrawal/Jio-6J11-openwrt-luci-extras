@@ -1,8 +1,8 @@
 #!/bin/sh
 # Creates the guest network the Guest Wi-Fi page controls, if you don't have one:
 #   - bridge br-guest, interface "guest" on 192.168.2.1/24, DHCP (2 h leases), no IPv6
-#   - one guest AP per radio (ifname guest2g / guest5g / guest6g), WPA2/WPA3,
-#     client isolation on, starting disabled with a random password
+#   - one guest AP per radio (ifname guest2g / guest5g / guest6g), WPA2 with the
+#     per-guest password file, client isolation on, starting disabled
 #   - firewall zone "guest": internet only (no LAN, no router access except DHCP/DNS)
 #   - guest DNS forced to the router (nft snippet 50-guest-dns.nft)
 # Run on the router: sh setup.sh ["Guest SSID"] [subnet prefix, default 192.168.2]
@@ -61,7 +61,7 @@ uci batch <<-EOF
 EOF
 
 # one guest AP per radio, named after its band
-key=$(tr -dc 'a-km-np-zA-HJ-NP-Z2-9' </dev/urandom | head -c 10)
+key=$(tr -dc 'a-km-np-zA-HJ-NP-Z2-9' </dev/urandom | head -c 24)   # never shown; guests get per-pass keys
 for r in $(uci -q show wireless | sed -n "s/^wireless\.\([^.=]*\)=wifi-device$/\1/p"); do
 	band=$(uci -q get wireless.$r.band || echo $r)
 	s=guest_$r
@@ -70,8 +70,9 @@ for r in $(uci -q show wireless | sed -n "s/^wireless\.\([^.=]*\)=wifi-device$/\
 		set wireless.$s.device='$r'
 		set wireless.$s.network='guest'
 		set wireless.$s.mode='ap'
-		set wireless.$s.encryption='sae-mixed'
+		set wireless.$s.encryption='psk2'
 		set wireless.$s.key='$key'
+		set wireless.$s.wpa_psk_file='/var/run/guestwifi.psk'
 		set wireless.$s.isolate='1'
 		set wireless.$s.ifname='guest$band'
 		set wireless.$s.disabled='1'
