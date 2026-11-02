@@ -1,6 +1,6 @@
 # OpenWrt LuCI extras (JioRouter AX6000 / JIDU6J11)
 
-Three small LuCI pages and a few notes from my home router setup: OpenWrt on a
+Four small LuCI pages and a few notes from my home router setup: OpenWrt on a
 JioRouter AX6000 (JIDU6J11), with an IPv6-only Jio phone tethered as the uplink.
 
 > [!CAUTION]
@@ -25,6 +25,7 @@ JioRouter AX6000 (JIDU6J11), with an IPv6-only Jio phone tethered as the uplink.
 | [`speedtest/`](speedtest) | **Speed Test** page (Services → Speed Test). The router tests its own line to Cloudflare: ping, jitter, download and upload, for IPv4 and IPv6 separately, with live graphs and a history. Shows the CLAT (tayga) CPU load if you run one. |
 | [`device-usage/`](device-usage) | **Device Usage** page (Services → Device Usage). Wi-Fi download/upload per device, minute by minute (median, 95th percentile, peak, MB used), plus optional per-device **download speed limits** (HTB on the access points). |
 | [`guest-wifi/`](guest-wifi) | **Guest Wi-Fi** "Guest Pass" page (Services → Guest Wi-Fi). Turn guest Wi-Fi on for a set time (or until midnight) with a **data cap** and a **speed cap**. It turns itself off when either runs out. Shows the SSID, password and a join QR code, lists who's connected, and makes a new password in one tap. `setup.sh` creates the isolated guest network if you don't have one. |
+| [`health/`](health) | **Health** page (Services → Health). RAM, CPU per core, CLAT (tayga) load if you run one, temperature, flash and `/tmp`, with 24 h graphs and a daily summary for a year. It also watches the services you list and shows when each one last stopped. |
 | [`nft-snippets/`](nft-snippets) | `30-dns-hijack.nft`: forces all LAN devices' plain DNS (IPv4 and IPv6) to the router's resolver. |
 | [`docs/`](docs) | [`clat-ipv6-only-uplink.md`](docs/clat-ipv6-only-uplink.md): how to get fast IPv4 over an IPv6-only phone uplink with a router-side CLAT (tayga). |
 
@@ -39,10 +40,10 @@ scp -O -r speedtest root@192.168.1.1:/tmp/
 sh /tmp/speedtest/install.sh
 ```
 
-Do the same for `device-usage`. Then reload LuCI: the page is under **Services**.
+Do the same for `device-usage`, `guest-wifi` and `health`. Then reload LuCI: the page is under **Services**.
 
 Installers copy the files, restart `rpcd`, clear the LuCI cache and add the files
-to `/etc/sysupgrade.conf`. `device-usage` also adds a once-a-minute cron job.
+to `/etc/sysupgrade.conf`. `device-usage` and `health` also add a once-a-minute cron job.
 
 ### Requirements
 
@@ -74,15 +75,39 @@ to `/etc/sysupgrade.conf`. `device-usage` also adds a once-a-minute cron job.
   - With a router-side CLAT (see docs), add `iifname "br-guest" oifname "clat" accept`
     to the CLAT forward rules, and the guest subnet to its NAT44 masquerade rule.
 
+- **Health**: nothing extra. One sample a minute takes ~30 ms; the last 24 h stay
+  in RAM (`/tmp/health.csv`, ~100 KB), and only state changes and one line a day
+  are written to flash (`/root/health.events`, `/root/health-daily.csv`).
+
+  **Services:** the installer writes `/etc/health.services` with what it finds:
+  dnsmasq, cron, odhcpd, uhttpd, tayga, and this repo's Device Usage and Guest
+  Wi-Fi jobs. Add your own, one per line (the file explains the format):
+
+  ```
+  # name|kind|match|max age (s)|label|description|file
+  adblock|ps|/usr/bin/adblock|0|Adblock|blocks ads for the LAN
+  backup|cron|/root/backup.sh|90000|Nightly backup|backup.sh, 03:00|/tmp/backup.done
+  ```
+
+  A daemon (`ps`) is up while a process whose command line contains `match` runs.
+  A cron job is up while `file` (default `/var/lock/<name>`) changed within
+  `max age` seconds, and off if `match` isn't in the crontab. A service counts as
+  stopped after two bad samples in a row.
+
+  **Alerts:** make `/etc/health.hook` executable and it runs on each change with
+  `<name> <up|down> <detail> <label>`, for example to send a Telegram message.
+
 ## Remove
 
 ```sh
 sh /tmp/speedtest/uninstall.sh
 sh /tmp/device-usage/uninstall.sh
 sh /tmp/guest-wifi/uninstall.sh          # add --all to also delete the guest network
+sh /tmp/health/uninstall.sh
 ```
 
-This removes every file, the cron jobs, any speed limits and the history.
+This removes every file, the cron jobs, any speed limits and the history
+(for Health also your `/etc/health.services` and `/etc/health.hook`).
 
 ## What's *not* here, and why
 

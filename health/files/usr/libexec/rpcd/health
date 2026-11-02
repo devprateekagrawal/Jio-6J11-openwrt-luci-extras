@@ -1,0 +1,21 @@
+#!/bin/sh
+# rpcd plugin for the Health LuCI page (sampler /usr/bin/health.sh, cron every minute).
+# Only reads the sampler's files.
+
+# "<name>":"<lines, each ending in \n>"
+field() { printf '"%s":"' "$1"; awk '{ gsub(/\\/, "\\\\"); gsub(/"/, "\\\""); printf "%s\\n", $0 }'; printf '"'; }
+
+case "$1" in
+	list) echo '{ "get": { } }' ;;
+	call)
+		case "$2" in
+			get)
+				printf '{"now":%s,' "$(date +%s)"
+				cat /tmp/health.csv 2>/dev/null | field rows; printf ','
+				cat /tmp/health.info 2>/dev/null | field info; printf ','
+				cat /tmp/health.state 2>/dev/null | field state; printf ','
+				tail -n 100 /root/health.events 2>/dev/null | field events; printf ','
+				tail -n 30 /root/health-daily.csv 2>/dev/null | field daily
+				echo '}' ;;
+		esac ;;
+esac

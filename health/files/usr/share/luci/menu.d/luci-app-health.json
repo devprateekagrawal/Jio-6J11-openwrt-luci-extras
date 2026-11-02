@@ -1,0 +1,13 @@
+{
+	"admin/services/health": {
+		"title": "Health",
+		"order": 19,
+		"action": {
+			"type": "view",
+			"path": "health"
+		},
+		"depends": {
+			"acl": [ "luci-app-health" ]
+		}
+	}
+}

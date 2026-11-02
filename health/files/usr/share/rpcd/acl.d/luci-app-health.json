@@ -1,0 +1,6 @@
+{
+	"luci-app-health": {
+		"description": "Health: RAM, CPU, temperature, storage and service watchdog history",
+		"read": { "ubus": { "health": [ "get" ] } }
+	}
+}
